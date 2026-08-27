@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OmniPulse AI - Autonomous Enterprise Market & Competitor Intelligence Platform</title>
+  <meta name="description" content="Next-generation autonomous multi-agent intelligence platform for continuous competitor monitoring, pricing telemetry, and strategic executive playbooks.">
+  <link rel="stylesheet" href="src/css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛰️</text></svg>">
+</head>
+<body>
+
+  <!-- Ambient Glowing Background Orbs -->
+  <div class="ambient-glow">
+    <div class="ambient-orb-1"></div>
+    <div class="ambient-orb-2"></div>
+  </div>
+
+  <div id="app">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div>
+        <div class="sidebar-header">
+          <div class="logo-badge">Ω</div>
+          <div>
+            <div class="logo-title">OmniPulse AI</div>
+            <div class="logo-tag">Agent Swarm v2.6</div>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav">
+          <div class="nav-category">Intelligence Hub</div>
+          <a class="nav-item active" data-tab="dashboard" id="nav-dashboard">
+            <span class="nav-icon">📊</span>
+            <span>Executive Overview</span>
+          </a>
+          <a class="nav-item" data-tab="mission-control" id="nav-mission-control">
+            <span class="nav-icon">🛰️</span>
+            <span>Agent Mission Control</span>
+            <span class="nav-badge">4 Active</span>
+          </a>
+          <a class="nav-item" data-tab="battlecards" id="nav-battlecards">
+            <span class="nav-icon">🏢</span>
+            <span>Competitor Battlecards</span>
+          </a>
+          <a class="nav-item" data-tab="playbooks" id="nav-playbooks">
+            <span class="nav-icon">🎯</span>
+            <span>Strategic Playbooks</span>
+            <span class="nav-badge" style="background: rgba(16,185,129,0.2); color: var(--emerald);">New</span>
+          </a>
+          <a class="nav-item" data-tab="sentiment" id="nav-sentiment">
+            <span class="nav-icon">🎙️</span>
+            <span>Sentiment & Voice Lab</span>
+          </a>
+
+          <div class="nav-category" style="margin-top: 14px;">System & Settings</div>
+          <a class="nav-item" data-tab="settings" id="nav-settings">
+            <span class="nav-icon">⚙️</span>
+            <span>Engine Settings</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="swarm-status-box">
+          <div>
+            <div style="font-size: 11px; color: var(--text-muted);">Swarm Status</div>
+            <div class="status-indicator">
+              <span class="status-dot"></span>
+              <span>All 4 Agents Online</span>
+            </div>
+          </div>
+          <span style="font-size: 18px;">⚡</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-wrapper">
+      <!-- Top Bar -->
+      <header class="top-header">
+        <div class="header-left">
+          <div class="scenario-picker">
+            <span class="scenario-label">Sector Intelligence:</span>
+            <select class="scenario-select" id="scenario-select">
+              <option value="ai_workspace">🤖 AI Workspace & Productivity (Notion vs Linear)</option>
+              <option value="fintech_payments">💳 Fintech & Payment Rails (Stripe vs Adyen)</option>
+              <option value="cloud_database">⚡ Cloud DB & Serverless (Supabase vs Neon)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="btn btn-secondary" id="btn-open-custom-scan">
+            <span>🔍</span>
+            <span>Scan Custom Target</span>
+          </button>
+          <button class="btn btn-secondary" id="btn-export-dossier">
+            <span>📑</span>
+            <span>Export Briefing</span>
+          </button>
+          <button class="btn btn-primary" id="btn-run-mission">
+            <span>🚀</span>
+            <span>Trigger Swarm Scan</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Views Container -->
+      <main class="content-area">
+        
+        <!-- 1. DASHBOARD VIEW -->
+        <section class="view-panel active" id="view-dashboard">
+          <!-- Hero Header Card -->
+          <div class="hero-card">
+            <div>
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
+                <span class="nav-badge" style="background: rgba(0,242,254,0.15); color: var(--cyan);" id="hero-company-tag">OmniFlow Workspace</span>
+                <span style="font-size: 12px; color: var(--text-muted);">Continuous Reconnaissance</span>
+              </div>
+              <h1 class="hero-title" id="hero-title">OmniFlow Workspace Strategic Mission Control</h1>
+              <p class="hero-subtitle" id="hero-subtitle">Continuous Autonomous Multi-Agent Reconnaissance in Enterprise Productivity & Multi-Agent Collaboration.</p>
+            </div>
+
+            <div class="hero-stats">
+              <div class="hero-stat-box">
+                <div class="hero-stat-value" id="stat-tracked-comp">3 Targets</div>
+                <div class="hero-stat-label">Active Monitoring</div>
+              </div>
+              <div class="hero-stat-box">
+                <div class="hero-stat-value" style="color: var(--emerald);" id="stat-tactics-ready">3 Ready</div>
+                <div class="hero-stat-label">Counter-Playbooks</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 Metric Cards -->
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-label">Competitor Threat Index</span>
+                <div class="metric-icon-badge badge-amber">⚠️</div>
+              </div>
+              <div class="metric-value" id="metric-threat-val">78 / 100</div>
+              <div class="metric-change change-up" id="metric-threat-delta">+12% MoM</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-label">Pricing Advantage Gap</span>
+                <div class="metric-icon-badge badge-emerald">💰</div>
+              </div>
+              <div class="metric-value" style="color: var(--emerald);" id="metric-pricing-val">-18%</div>
+              <div class="metric-change change-up" id="metric-pricing-note">18% Cheaper Than Linear Pro</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-label">Customer Sentiment Score</span>
+                <div class="metric-icon-badge badge-violet">🎙️</div>
+              </div>
+              <div class="metric-value" style="color: var(--violet);" id="metric-sentiment-val">84 / 100</div>
+              <div class="metric-change change-up" id="metric-sentiment-delta">+6.4 pts vs Industry Avg</div>
+            </div>
+
+            <div class="metric-card">
+              <div class="metric-top">
+                <span class="metric-label">Feature Parity Ratio</span>
+                <div class="metric-icon-badge badge-cyan">⚡</div>
+              </div>
+              <div class="metric-value" style="color: var(--cyan);" id="metric-feature-val">88%</div>
+              <div class="metric-change change-neutral" id="metric-feature-count">28 / 32 Tracked Features</div>
+            </div>
+          </div>
+
+          <!-- Dashboard 2-Column Section -->
+          <div class="dashboard-row">
+            <!-- Left: Radar Capability Matrix -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title"><span>📡</span> Multi-Dimensional Capability Radar</h3>
+                  <p class="card-subtitle">Real-time benchmark comparison against competitor cohort averages.</p>
+                </div>
+                <span class="nav-badge" style="background: rgba(0,242,254,0.15); color: var(--cyan);">Live Vector</span>
+              </div>
+              <div id="radar-chart-container" style="min-height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center;"></div>
+            </div>
+
+            <!-- Right: Circular Threat Index & Telemetry Feed -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title"><span>🎯</span> Overall Sector Threat Score</h3>
+                  <p class="card-subtitle">Aggregated risk modeling across pricing, features & sentiment.</p>
+                </div>
+              </div>
+              <div id="threat-gauge-container" style="margin-bottom: 20px;"></div>
+              
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 16px;">
+                <div style="font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px;">Recent Swarm Signals:</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; gap: 8px;">
+                  <span style="color: var(--cyan);">•</span>
+                  <span><strong>Notion AI</strong> deployed 2 new API endpoints for database sync.</span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-secondary); display: flex; gap: 8px;">
+                  <span style="color: var(--rose);">•</span>
+                  <span><strong>Linear</strong> customer churn up 4% due to limited team doc collaboration.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Historical Trend & Feature Parity Row -->
+          <div class="dashboard-row" style="margin-top: 24px;">
+            <!-- Left: 6-Month Velocity Trend Chart -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title"><span>📈</span> Market Velocity & Threat Trajectory (6-Month Trend)</h3>
+                  <p class="card-subtitle">Aggregated MoM product velocity & price advantage index.</p>
+                </div>
+                <span class="nav-badge" style="background: rgba(16,185,129,0.15); color: var(--emerald);">+14.2% Growth</span>
+              </div>
+              <div id="trend-chart-container" style="min-height: 180px;"></div>
+            </div>
+
+            <!-- Right: Feature Parity Breakdown -->
+            <div class="card">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title"><span>⚡</span> Key Feature Parity Matrix</h3>
+                  <p class="card-subtitle">Direct capability comparison vs tier-1 competitors.</p>
+                </div>
+              </div>
+              <div id="dashboard-feature-matrix-container">
+                <!-- Injected via JavaScript -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 2. MISSION CONTROL VIEW -->
+        <section class="view-panel" id="view-mission-control">
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🛰️</span> Autonomous Multi-Agent Swarm Orchestrator</h2>
+                <p class="card-subtitle">Specialist AI agents execute parallel reconnaissance, sentiment clustering, and counter-strategy generation.</p>
+              </div>
+              <button class="btn btn-primary" onclick="document.getElementById('btn-run-mission').click()">
+                <span>⚡</span> Run Full Swarm Scan
+              </button>
+            </div>
+
+            <!-- 4 Agent Nodes Grid -->
+            <div class="swarm-grid">
+              <!-- Agent 1: Recon Scout -->
+              <div class="agent-node-card" id="agent-node-scout">
+                <div class="agent-node-header">
+                  <div class="agent-avatar">🛰️</div>
+                  <div>
+                    <div class="agent-name">Recon Scout</div>
+                    <div class="agent-role">Pricing & Feature Scraper</div>
+                  </div>
+                </div>
+                <span class="agent-status-badge status-idle" id="status-badge-scout">IDLE</span>
+                <div class="agent-progress-bar">
+                  <div class="agent-progress-fill" id="progress-bar-scout"></div>
+                </div>
+              </div>
+
+              <!-- Agent 2: Sentiment Lens -->
+              <div class="agent-node-card" id="agent-node-sentiment">
+                <div class="agent-node-header">
+                  <div class="agent-avatar">🎙️</div>
+                  <div>
+                    <div class="agent-name">Sentiment Lens</div>
+                    <div class="agent-role">Voice of Customer & G2 Miner</div>
+                  </div>
+                </div>
+                <span class="agent-status-badge status-idle" id="status-badge-sentiment">IDLE</span>
+                <div class="agent-progress-bar">
+                  <div class="agent-progress-fill" id="progress-bar-sentiment"></div>
+                </div>
+              </div>
+
+              <!-- Agent 3: StratOps Moat -->
+              <div class="agent-node-card" id="agent-node-strategy">
+                <div class="agent-node-header">
+                  <div class="agent-avatar">⚔️</div>
+                  <div>
+                    <div class="agent-name">StratOps Moat</div>
+                    <div class="agent-role">SWOT & Elasticity Engine</div>
+                  </div>
+                </div>
+                <span class="agent-status-badge status-idle" id="status-badge-strategy">IDLE</span>
+                <div class="agent-progress-bar">
+                  <div class="agent-progress-fill" id="progress-bar-strategy"></div>
+                </div>
+              </div>
+
+              <!-- Agent 4: Playbook Dispatch -->
+              <div class="agent-node-card" id="agent-node-playbook">
+                <div class="agent-node-header">
+                  <div class="agent-avatar">🎯</div>
+                  <div>
+                    <div class="agent-name">Action Dispatch</div>
+                    <div class="agent-role">Playbook & Task Synthesizer</div>
+                  </div>
+                </div>
+                <span class="agent-status-badge status-idle" id="status-badge-playbook">IDLE</span>
+                <div class="agent-progress-bar">
+                  <div class="agent-progress-fill" id="progress-bar-playbook"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Live Agent Log Terminal -->
+            <div class="terminal-window">
+              <div class="terminal-header">
+                <div class="terminal-dots">
+                  <span class="dot dot-red"></span>
+                  <span class="dot dot-yellow"></span>
+                  <span class="dot dot-green"></span>
+                </div>
+                <div class="terminal-title">OMNIPULSE-SWARM-DAEMON // LIVE REASONING STREAM</div>
+                <div style="font-size: 10px; color: var(--cyan); font-family: var(--font-mono);">ENCRYPTED TLS 1.3</div>
+              </div>
+              <div class="terminal-body" id="terminal-logs">
+                <div class="log-entry">
+                  <span class="log-time">[14:30:00.120]</span>
+                  <span class="log-tag-scout">[SYSTEM]</span>
+                  <span class="log-text">OmniPulse Swarm Daemon ready. Awaiting target mission dispatch.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. COMPETITOR BATTLECARDS VIEW -->
+        <section class="view-panel" id="view-battlecards">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🏢</span> In-Depth Competitor Battlecards</h2>
+                <p class="card-subtitle">Comprehensive teardown of competitor tiers, pricing models, moats, and exploitable vulnerabilities.</p>
+              </div>
+            </div>
+
+            <div class="table-container">
+              <table class="battle-table">
+                <thead>
+                  <tr>
+                    <th>Competitor Platform</th>
+                    <th>Threat Index</th>
+                    <th>Pricing Model</th>
+                    <th>Sentiment / Growth</th>
+                    <th>Moat vs Vulnerability Analysis</th>
+                  </tr>
+                </thead>
+                <tbody id="battlecard-tbody">
+                  <!-- Injected via JavaScript -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- 4. STRATEGIC PLAYBOOKS VIEW -->
+        <section class="view-panel" id="view-playbooks">
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🎯</span> Autonomous Strategic Counter-Playbooks</h2>
+                <p class="card-subtitle">AI-synthesized tactical campaigns designed to exploit competitor gaps and capture market share.</p>
+              </div>
+            </div>
+
+            <div class="playbooks-grid" id="playbooks-container">
+              <!-- Injected via JavaScript -->
+            </div>
+          </div>
+        </section>
+
+        <!-- 5. SENTIMENT & VOICE LAB VIEW -->
+        <section class="view-panel" id="view-sentiment">
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>🎙️</span> Customer Sentiment & Voice Vector Miner</h2>
+                <p class="card-subtitle">Unsupervised clustering of real customer reviews across G2, TrustPilot, Reddit, and ProductHunt.</p>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+              <div>
+                <h4 style="font-family: var(--font-display); font-size: 16px; color: var(--emerald); margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <span>🟢</span> Key Value Drivers (Why Customers Choose You)
+                </h4>
+                <div id="sentiment-positive-list"></div>
+              </div>
+
+              <div>
+                <h4 style="font-family: var(--font-display); font-size: 16px; color: #F87171; margin-bottom: 14px; display: flex; align-items: center; gap: 8px;">
+                  <span>🔴</span> Competitor Churn Vectors (Areas to Attack)
+                </h4>
+                <div id="sentiment-friction-list"></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 6. SETTINGS VIEW -->
+        <section class="view-panel" id="view-settings">
+          <div class="card" style="max-width: 680px;">
+            <div class="card-header">
+              <div>
+                <h2 class="card-title"><span>⚙️</span> Engine Configuration & API Keys</h2>
+                <p class="card-subtitle">Customize autonomous crawling frequency, telemetry sensitivity, and LLM inference providers.</p>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Active Inference Engine Mode</label>
+              <select class="form-input">
+                <option selected>Deterministic High-Fidelity Simulation Engine (Recommended for Judges)</option>
+                <option>Live Multi-Model API (OpenAI GPT-4o / Claude 3.5 / Gemini 2.0)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Custom OpenAI / Gemini API Key (Optional)</label>
+              <input type="password" class="form-input" placeholder="sk-proj-..." value="">
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Keys are processed locally in your browser memory and never persisted remotely.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Autonomous Webhook Dispatch URL (Slack / Discord / Jira)</label>
+              <input type="text" class="form-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT">
+            </div>
+
+            <button class="btn btn-primary" onclick="window.appInstance.showToast('✅ Configuration saved successfully.')">
+              Save Settings
+            </button>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Export Dossier Modal -->
+  <div class="modal-overlay" id="modal-export">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">📑 Executive Intelligence Dossier</div>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="margin-bottom: 16px; font-size: 13px; color: var(--text-secondary);">
+          Ready-to-share executive briefing compiled by OmniPulse AI Multi-Agent Swarm.
+        </div>
+        <pre id="dossier-preview-text" style="background: rgba(0,0,0,0.5); padding: 16px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 11px; color: #CBD5E1; max-height: 320px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 20px;"></pre>
+        
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button class="btn btn-secondary" data-close-modal>Close</button>
+          <button class="btn btn-secondary" id="btn-copy-dossier">📋 Copy Markdown</button>
+          <button class="btn btn-primary" id="btn-print-dossier">🖨️ Print / Save as PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Target Scan Modal -->
+  <div class="modal-overlay" id="modal-custom-scan">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title">🔍 Scan Custom Competitor / Company</div>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 18px;">
+          Deploy the 4-Agent Autonomous Swarm to perform live reconnaissance, review mining, and strategic playbook synthesis on any startup or enterprise.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Target Company / Product Name</label>
+          <input type="text" id="custom-target-name" class="form-input" placeholder="e.g. Resend / Cursor / Supabase / Vercel" value="Cursor AI Editor">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Target Website URL or Sector</label>
+          <input type="text" id="custom-target-url" class="form-input" placeholder="https://..." value="https://cursor.com">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px;">
+          <button class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button class="btn btn-primary" id="btn-start-custom-scan">
+            🚀 Launch Swarm Reconnaissance
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playbook Detail Modal -->
+  <div class="modal-overlay" id="modal-playbook-detail">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-title" id="playbook-modal-title">🎯 Strategic Playbook Execution</div>
+        <button class="modal-close" data-close-modal>&times;</button>
+      </div>
+      <div class="modal-body">
+        <div id="playbook-modal-content"></div>
+        <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 20px;">
+          <button class="btn btn-secondary" data-close-modal>Close</button>
+          <button class="btn btn-primary" id="btn-confirm-dispatch">
+            ⚡ Dispatch to Slack & Jira Backlog
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- App Script Entry Point -->
+  <script type="module" src="src/js/app.js"></script>
+</body>
+</html>

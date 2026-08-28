@@ -511,6 +511,7 @@ class App {
   renderActiveScenario() {
     this.renderHero();
     this.renderMetrics();
+    this.renderSignals();
     this.renderBattlecards();
     this.renderPlaybooks();
     this.renderSentiment();
@@ -520,6 +521,23 @@ class App {
     ChartEngine.renderRadarChart('radar-chart-container', this.currentScenario);
     ChartEngine.renderCircularGauge('threat-gauge-container', this.currentScenario.metrics.threatIndex, 'Threat Score');
     ChartEngine.renderTrendChart('trend-chart-container', this.currentScenario.trendHistory);
+  }
+
+  renderSignals() {
+    const container = document.getElementById('recent-signals-container');
+    if (!container) return;
+
+    const signals = this.currentScenario.recentSignals || [
+      { color: "cyan", text: `<strong>${this.currentScenario.targetCompany}</strong> live telemetry updated from domain endpoint.` },
+      { color: "rose", text: `High competitive intensity detected in ${this.currentScenario.marketSector.split(' ')[0]}.` }
+    ];
+
+    container.innerHTML = signals.map(sig => `
+      <div style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; display: flex; gap: 8px;">
+        <span style="color: ${sig.color === 'rose' ? 'var(--rose)' : 'var(--cyan)'};">•</span>
+        <span>${sig.text}</span>
+      </div>
+    `).join('');
   }
 
   renderHero() {

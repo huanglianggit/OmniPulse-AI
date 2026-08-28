@@ -59,18 +59,47 @@ export class ChartEngine {
       `;
     });
 
-    // Target Company Polygon (OmniPulse)
-    const targetValues = [92, 86, 94, 80, 95];
+    // Target Company Polygon (OmniPulse / Scanned Target)
+    const caps = (data && data.capabilities) || {
+      velocity: data && data.metrics ? Math.min(96, Math.max(60, data.metrics.threatIndex + 8)) : 90,
+      pricing: 82,
+      sentiment: data && data.metrics ? Math.min(95, parseInt(data.metrics.sentimentScore) || 86) : 86,
+      moat: 80,
+      autonomy: 92
+    };
+
+    const compCaps = (data && data.competitorCapabilities) || {
+      velocity: Math.max(50, (caps.velocity || 85) - 10),
+      pricing: Math.max(45, (caps.pricing || 80) - 15),
+      sentiment: Math.max(55, (caps.sentiment || 85) - 12),
+      moat: Math.min(95, (caps.moat || 78) + 8),
+      autonomy: Math.max(40, (caps.autonomy || 90) - 25)
+    };
+
+    const targetValues = [
+      caps.velocity || 88,
+      caps.pricing || 80,
+      caps.sentiment || 86,
+      caps.moat || 82,
+      caps.autonomy || 90
+    ];
+
+    const compValues = [
+      compCaps.velocity || 78,
+      compCaps.pricing || 68,
+      compCaps.sentiment || 74,
+      compCaps.moat || 85,
+      compCaps.autonomy || 65
+    ];
+
     const targetPoints = targetValues.map((val, i) => {
-      const r = (radius * (val / 100));
+      const r = (radius * (Math.min(100, Math.max(20, val)) / 100));
       const angle = i * angleSlice - Math.PI / 2;
       return `${centerX + r * Math.cos(angle)},${centerY + r * Math.sin(angle)}`;
     });
 
-    // Top Competitor Polygon (Benchmark)
-    const compValues = [85, 68, 82, 90, 60];
     const compPoints = compValues.map((val, i) => {
-      const r = (radius * (val / 100));
+      const r = (radius * (Math.min(100, Math.max(20, val)) / 100));
       const angle = i * angleSlice - Math.PI / 2;
       return `${centerX + r * Math.cos(angle)},${centerY + r * Math.sin(angle)}`;
     });

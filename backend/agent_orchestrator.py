@@ -36,11 +36,19 @@ class AgentOrchestrator:
             print(f"[AgentOrchestrator] No API Key provided. Running dynamic web-tailored synthesizer.")
             return self._generate_dynamic_dataset(target_name, target_url, scraped_data)
 
+    def _get_chat_endpoint(self) -> str:
+        base = self.api_base.strip().rstrip("/")
+        if base.endswith("/chat/completions"):
+            return base
+        return f"{base}/chat/completions"
+
     def _call_llm_swarm(self, target_name: str, target_url: str, scraped_data: dict) -> dict:
         """
         Call OpenAI/DeepSeek/Gemini compatible chat completion endpoint.
         """
         raw_text = scraped_data.get("raw_summary", "")
+        endpoint = self._get_chat_endpoint()
+        print(f"[AgentOrchestrator] Endpoint: {endpoint} | Model: {self.model}")
 
         system_prompt = """You are OmniPulse AI Swarm Commander, an elite enterprise competitive intelligence engine.
 Analyze the provided live web scrape of a company and generate a comprehensive, highly realistic JSON intelligence report.
@@ -163,7 +171,6 @@ Generate the customized JSON intelligence report."""
         if "deepseek" in self.model or "gpt" in self.model:
             payload["response_format"] = {"type": "json_object"}
 
-        endpoint = f"{self.api_base}/chat/completions"
         data_bytes = json.dumps(payload).encode("utf-8")
 
         headers = {

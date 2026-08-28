@@ -14,6 +14,13 @@ class App {
     this.agentEngine = null;
     this.activeTab = 'dashboard';
     
+    this.config = {
+      apiKey: localStorage.getItem('omnipulse_api_key') || '',
+      apiBase: localStorage.getItem('omnipulse_api_base') || 'https://api.deepseek.com/v1',
+      model: localStorage.getItem('omnipulse_model') || 'deepseek-chat',
+      webhookUrl: localStorage.getItem('omnipulse_webhook') || 'https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT'
+    };
+
     this.init();
   }
 
@@ -22,6 +29,7 @@ class App {
     this.setupNavigation();
     this.setupScenarioPicker();
     this.setupEventListeners();
+    this.loadSettingsToUI();
     this.renderActiveScenario();
     this.showToast('✨ OmniPulse AI Intelligence Engine initialized.');
   }
@@ -68,13 +76,20 @@ class App {
           progressBar.style.width = `${progress}%`;
         }
       },
-      onComplete: () => {
+      onComplete: (realData) => {
         const runBtn = document.getElementById('btn-run-mission');
         if (runBtn) {
           runBtn.disabled = false;
           runBtn.innerHTML = '🚀 Trigger Autonomous Swarm Scan';
         }
-        this.showToast('✅ Intelligence Scan Complete! Telemetry updated.');
+
+        if (realData && realData.metrics) {
+          this.currentScenario = realData;
+          this.showToast('✅ Live Telemetry Crawled & Synthesized by Multi-Agent Swarm!');
+        } else {
+          this.showToast('✅ Intelligence Scan Complete! Dashboard updated with fresh telemetry.');
+        }
+
         this.renderMetrics();
         this.renderBattlecards();
         this.renderPlaybooks();
@@ -158,7 +173,7 @@ class App {
 
         // Switch to mission control to let user watch execution
         this.switchTab('mission-control');
-        this.agentEngine.runMission(this.currentScenario.targetCompany);
+        this.agentEngine.runMission(this.currentScenario.targetCompany, "", this.config);
       });
     }
 
@@ -186,24 +201,54 @@ class App {
         const nameInput = document.getElementById('custom-target-name');
         const urlInput = document.getElementById('custom-target-url');
 
-        const targetName = nameInput ? nameInput.value : 'Custom Startup';
-        const targetUrl = urlInput ? urlInput.value : 'https://example.com';
+        const targetName = nameInput && nameInput.value.trim() ? nameInput.value.trim() : 'Linear App';
+        const targetUrl = urlInput && urlInput.value.trim() ? urlInput.value.trim() : 'https://linear.app';
 
         // Close modal
         document.getElementById('modal-custom-scan').classList.remove('active');
 
-        // Generate dynamic scenario
+        // Generate preliminary dynamic scenario
         const customScenario = generateCustomScenario(targetName, targetUrl);
         this.currentScenario = customScenario;
         this.renderActiveScenario();
 
-        // Switch to mission control and launch
+        // Switch to mission control and launch live crawl + LLM synthesis
         this.switchTab('mission-control');
         this.showToast(`🚀 Autonomous swarm launched for target: ${targetName}`);
         
         const terminal = document.getElementById('terminal-logs');
         if (terminal) terminal.innerHTML = '';
-        this.agentEngine.runMission(targetName);
+        this.agentEngine.runMission(targetName, targetUrl, this.config);
+      });
+    }
+
+    // Settings Form Save Button
+    const saveSettingsBtn = document.getElementById('btn-save-settings');
+    if (saveSettingsBtn) {
+      saveSettingsBtn.addEventListener('click', () => {
+        const apiKeyInput = document.getElementById('settings-api-key');
+        const apiBaseInput = document.getElementById('settings-api-base');
+        const modelInput = document.getElementById('settings-model');
+        const webhookInput = document.getElementById('settings-webhook');
+
+        if (apiKeyInput) {
+          this.config.apiKey = apiKeyInput.value.trim();
+          localStorage.setItem('omnipulse_api_key', this.config.apiKey);
+        }
+        if (apiBaseInput) {
+          this.config.apiBase = apiBaseInput.value.trim() || 'https://api.deepseek.com/v1';
+          localStorage.setItem('omnipulse_api_base', this.config.apiBase);
+        }
+        if (modelInput) {
+          this.config.model = modelInput.value.trim() || 'deepseek-chat';
+          localStorage.setItem('omnipulse_model', this.config.model);
+        }
+        if (webhookInput) {
+          this.config.webhookUrl = webhookInput.value.trim();
+          localStorage.setItem('omnipulse_webhook', this.config.webhookUrl);
+        }
+
+        this.showToast('✅ Configuration & API settings saved successfully.');
       });
     }
 
@@ -241,6 +286,18 @@ class App {
         this.showToast('🚀 Playbook dispatched to Slack #executive-strategy & Jira sprint backlog!');
       });
     }
+  }
+
+  loadSettingsToUI() {
+    const apiKeyInput = document.getElementById('settings-api-key');
+    const apiBaseInput = document.getElementById('settings-api-base');
+    const modelInput = document.getElementById('settings-model');
+    const webhookInput = document.getElementById('settings-webhook');
+
+    if (apiKeyInput && this.config.apiKey) apiKeyInput.value = this.config.apiKey;
+    if (apiBaseInput && this.config.apiBase) apiBaseInput.value = this.config.apiBase;
+    if (modelInput && this.config.model) modelInput.value = this.config.model;
+    if (webhookInput && this.config.webhookUrl) webhookInput.value = this.config.webhookUrl;
   }
 
   /**
@@ -438,7 +495,7 @@ class App {
       </div>
 
       <div style="font-size: 11px; color: var(--text-muted);">
-        📡 Webhook target: <code>https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT</code>
+        📡 Webhook target: <code>${this.config.webhookUrl}</code>
       </div>
     `;
 

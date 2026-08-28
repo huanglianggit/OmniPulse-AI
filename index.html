@@ -422,26 +422,29 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Active Inference Engine Mode</label>
-              <select class="form-input">
-                <option selected>Deterministic High-Fidelity Simulation Engine (Recommended for Judges)</option>
-                <option>Live Multi-Model API (OpenAI GPT-4o / Claude 3.5 / Gemini 2.0)</option>
-              </select>
+              <label class="form-label">LLM API Key (OpenAI / DeepSeek / Gemini / Claude)</label>
+              <input type="password" id="settings-api-key" class="form-input" placeholder="sk-..." value="">
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Optional. Leave blank to run high-fidelity deterministic swarm synthesis.</div>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Custom OpenAI / Gemini API Key (Optional)</label>
-              <input type="password" class="form-input" placeholder="sk-proj-..." value="">
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Keys are processed locally in your browser memory and never persisted remotely.</div>
+              <label class="form-label">API Base URL</label>
+              <input type="text" id="settings-api-base" class="form-input" placeholder="https://api.deepseek.com/v1" value="https://api.deepseek.com/v1">
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Compatible with DeepSeek, OpenAI, Ollama (http://localhost:11434/v1), SiliconFlow, etc.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Model Identifier</label>
+              <input type="text" id="settings-model" class="form-input" placeholder="deepseek-chat" value="deepseek-chat">
             </div>
 
             <div class="form-group">
               <label class="form-label">Autonomous Webhook Dispatch URL (Slack / Discord / Jira)</label>
-              <input type="text" class="form-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT">
+              <input type="text" id="settings-webhook" class="form-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT">
             </div>
 
-            <button class="btn btn-primary" onclick="window.appInstance.showToast('✅ Configuration saved successfully.')">
-              Save Settings
+            <button class="btn btn-primary" id="btn-save-settings">
+              Save Configuration
             </button>
           </div>
         </section>

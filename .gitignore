@@ -1,10 +1,18 @@
 # Dependencies & Cache
 node_modules/
+__pycache__/
+*.pyc
 .DS_Store
 Thumbs.db
 *.log
 .env
 .env.local
+
+# Video Scratch Build Assets
+docs/video_frames/
+docs/narrated_frames/
+docs/audio_clips/
+docs/app_screens/cdp_profile/
 
 # IDE & OS
 .vscode/

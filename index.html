@@ -416,28 +416,49 @@
           <div class="card" style="max-width: 680px;">
             <div class="card-header">
               <div>
-                <h2 class="card-title"><span>⚙️</span> Engine Configuration & API Keys</h2>
-                <p class="card-subtitle">Customize autonomous crawling frequency, telemetry sensitivity, and LLM inference providers.</p>
+                <h2 class="card-title"><span>⚙️</span> Engine Configuration & Model Provider</h2>
+                <p class="card-subtitle">Select your preferred AI model provider, fine-tune inference parameters, or use deterministic swarm simulation.</p>
               </div>
             </div>
 
+            <!-- Provider Selector -->
             <div class="form-group">
-              <label class="form-label">LLM API Key (OpenAI / DeepSeek / Gemini / Claude)</label>
+              <label class="form-label">AI Model Provider (服务商预设)</label>
+              <select id="settings-provider" class="form-input">
+                <option value="deepseek" selected>🌟 DeepSeek (推荐 · 极速且高性价比)</option>
+                <option value="openai">⚡ OpenAI (GPT-4o / GPT-4o-mini / o1)</option>
+                <option value="gemini">💎 Google Gemini (1.5 Pro / 1.5 Flash)</option>
+                <option value="siliconflow">🚀 硅基流动 SiliconFlow (DeepSeek-V3 / Qwen-72B)</option>
+                <option value="ollama">🦙 Ollama 本地模型 (Local / 零成本无限制)</option>
+                <option value="custom">🔧 自定义接入点 (Custom Endpoint / Proxy)</option>
+              </select>
+            </div>
+
+            <!-- Model Dropdown -->
+            <div class="form-group">
+              <label class="form-label">Model Selection (模型选择)</label>
+              <select id="settings-model-select" class="form-input">
+                <option value="deepseek-chat" selected>deepseek-chat (DeepSeek-V3)</option>
+                <option value="deepseek-reasoner">deepseek-reasoner (DeepSeek-R1 深度思考)</option>
+              </select>
+              <input type="text" id="settings-model" class="form-input" style="display: none; margin-top: 8px;" placeholder="Enter custom model identifier e.g. gpt-4o" value="deepseek-chat">
+            </div>
+
+            <!-- API Key -->
+            <div class="form-group">
+              <label class="form-label">LLM API Key (大模型 API 密钥)</label>
               <input type="password" id="settings-api-key" class="form-input" placeholder="sk-..." value="">
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Optional. Leave blank to run high-fidelity deterministic swarm synthesis.</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">选填。若留空，系统将自动基于抓取到的网页内容运行高保真多智能体启发式分析。</div>
             </div>
 
+            <!-- API Base URL -->
             <div class="form-group">
-              <label class="form-label">API Base URL</label>
+              <label class="form-label">API Base URL (接口地址)</label>
               <input type="text" id="settings-api-base" class="form-input" placeholder="https://api.deepseek.com/v1" value="https://api.deepseek.com/v1">
-              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Compatible with DeepSeek, OpenAI, Ollama (http://localhost:11434/v1), SiliconFlow, etc.</div>
+              <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">已自动匹配所选服务商标准接口，亦可手动修改。</div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label">Model Identifier</label>
-              <input type="text" id="settings-model" class="form-input" placeholder="deepseek-chat" value="deepseek-chat">
-            </div>
-
+            <!-- Webhook URL -->
             <div class="form-group">
               <label class="form-label">Autonomous Webhook Dispatch URL (Slack / Discord / Jira)</label>
               <input type="text" id="settings-webhook" class="form-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT">

@@ -7,6 +7,59 @@ import { PRESET_SCENARIOS, generateCustomScenario } from './presetData.js';
 import { ChartEngine } from './charts.js';
 import { AgentSwarmEngine } from './agentEngine.js';
 
+export const PROVIDER_PRESETS = {
+  deepseek: {
+    name: "DeepSeek",
+    base: "https://api.deepseek.com/v1",
+    models: [
+      { id: "deepseek-chat", name: "deepseek-chat (DeepSeek-V3 推荐)" },
+      { id: "deepseek-reasoner", name: "deepseek-reasoner (DeepSeek-R1 深度推理)" }
+    ]
+  },
+  openai: {
+    name: "OpenAI",
+    base: "https://api.openai.com/v1",
+    models: [
+      { id: "gpt-4o", name: "gpt-4o (Omni 全能旗舰)" },
+      { id: "gpt-4o-mini", name: "gpt-4o-mini (极速轻量)" },
+      { id: "o1-preview", name: "o1-preview (深度推理)" },
+      { id: "o3-mini", name: "o3-mini (新一代推理模型)" }
+    ]
+  },
+  gemini: {
+    name: "Google Gemini",
+    base: "https://generativelanguage.googleapis.com/v1beta/openai/",
+    models: [
+      { id: "gemini-1.5-pro", name: "gemini-1.5-pro (超长上下文)" },
+      { id: "gemini-1.5-flash", name: "gemini-1.5-flash (极速响应)" },
+      { id: "gemini-2.0-flash-exp", name: "gemini-2.0-flash-exp (下一代)" }
+    ]
+  },
+  siliconflow: {
+    name: "SiliconFlow 硅基流动",
+    base: "https://api.siliconflow.cn/v1",
+    models: [
+      { id: "deepseek-ai/DeepSeek-V3", name: "deepseek-ai/DeepSeek-V3" },
+      { id: "deepseek-ai/DeepSeek-R1", name: "deepseek-ai/DeepSeek-R1" },
+      { id: "Qwen/Qwen2.5-72B-Instruct", name: "Qwen/Qwen2.5-72B-Instruct" }
+    ]
+  },
+  ollama: {
+    name: "Ollama (Local)",
+    base: "http://localhost:11434/v1",
+    models: [
+      { id: "llama3.3:latest", name: "llama3.3:latest" },
+      { id: "qwen2.5:latest", name: "qwen2.5:latest" },
+      { id: "deepseek-r1:latest", name: "deepseek-r1:latest" }
+    ]
+  },
+  custom: {
+    name: "Custom Endpoint",
+    base: "https://api.openai.com/v1",
+    models: []
+  }
+};
+
 class App {
   constructor() {
     this.currentScenarioKey = 'ai_workspace';
@@ -15,6 +68,7 @@ class App {
     this.activeTab = 'dashboard';
     
     this.config = {
+      provider: localStorage.getItem('omnipulse_provider') || 'deepseek',
       apiKey: localStorage.getItem('omnipulse_api_key') || '',
       apiBase: localStorage.getItem('omnipulse_api_base') || 'https://api.deepseek.com/v1',
       model: localStorage.getItem('omnipulse_model') || 'deepseek-chat',
@@ -29,9 +83,73 @@ class App {
     this.setupNavigation();
     this.setupScenarioPicker();
     this.setupEventListeners();
-    this.loadSettingsToUI();
+    this.setupSettingsUI();
     this.renderActiveScenario();
     this.showToast('✨ OmniPulse AI Intelligence Engine initialized.');
+  }
+
+  /**
+   * Setup Settings Provider & Model Dropdowns
+   */
+  setupSettingsUI() {
+    const providerSelect = document.getElementById('settings-provider');
+    const modelSelect = document.getElementById('settings-model-select');
+    const modelInput = document.getElementById('settings-model');
+    const apiBaseInput = document.getElementById('settings-api-base');
+    const apiKeyInput = document.getElementById('settings-api-key');
+    const webhookInput = document.getElementById('settings-webhook');
+
+    const updateModelOptions = (providerKey, preserveModel = null) => {
+      const preset = PROVIDER_PRESETS[providerKey] || PROVIDER_PRESETS.deepseek;
+      
+      if (providerKey === 'custom' || preset.models.length === 0) {
+        if (modelSelect) modelSelect.style.display = 'none';
+        if (modelInput) {
+          modelInput.style.display = 'block';
+          modelInput.value = preserveModel || this.config.model || '';
+        }
+      } else {
+        if (modelInput) modelInput.style.display = 'none';
+        if (modelSelect) {
+          modelSelect.style.display = 'block';
+          modelSelect.innerHTML = preset.models.map(m => `
+            <option value="${m.id}" ${m.id === (preserveModel || this.config.model) ? 'selected' : ''}>
+              ${m.name}
+            </option>
+          `).join('');
+          
+          if (!preserveModel && preset.models.length > 0) {
+            this.config.model = preset.models[0].id;
+          }
+        }
+      }
+    };
+
+    if (providerSelect) {
+      providerSelect.value = this.config.provider;
+      providerSelect.addEventListener('change', (e) => {
+        const pKey = e.target.value;
+        this.config.provider = pKey;
+        const preset = PROVIDER_PRESETS[pKey];
+        if (preset && apiBaseInput) {
+          apiBaseInput.value = preset.base;
+          this.config.apiBase = preset.base;
+        }
+        updateModelOptions(pKey);
+      });
+    }
+
+    if (modelSelect) {
+      modelSelect.addEventListener('change', (e) => {
+        this.config.model = e.target.value;
+      });
+    }
+
+    // Initialize UI values
+    updateModelOptions(this.config.provider, this.config.model);
+    if (apiBaseInput && this.config.apiBase) apiBaseInput.value = this.config.apiBase;
+    if (apiKeyInput && this.config.apiKey) apiKeyInput.value = this.config.apiKey;
+    if (webhookInput && this.config.webhookUrl) webhookInput.value = this.config.webhookUrl;
   }
 
   /**
@@ -226,10 +344,28 @@ class App {
     const saveSettingsBtn = document.getElementById('btn-save-settings');
     if (saveSettingsBtn) {
       saveSettingsBtn.addEventListener('click', () => {
+        const providerSelect = document.getElementById('settings-provider');
+        const modelSelect = document.getElementById('settings-model-select');
+        const modelInput = document.getElementById('settings-model');
         const apiKeyInput = document.getElementById('settings-api-key');
         const apiBaseInput = document.getElementById('settings-api-base');
-        const modelInput = document.getElementById('settings-model');
         const webhookInput = document.getElementById('settings-webhook');
+
+        if (providerSelect) {
+          this.config.provider = providerSelect.value;
+          localStorage.setItem('omnipulse_provider', this.config.provider);
+        }
+
+        if (this.config.provider === 'custom') {
+          if (modelInput) {
+            this.config.model = modelInput.value.trim() || 'deepseek-chat';
+          }
+        } else {
+          if (modelSelect) {
+            this.config.model = modelSelect.value || 'deepseek-chat';
+          }
+        }
+        localStorage.setItem('omnipulse_model', this.config.model);
 
         if (apiKeyInput) {
           this.config.apiKey = apiKeyInput.value.trim();
@@ -239,16 +375,12 @@ class App {
           this.config.apiBase = apiBaseInput.value.trim() || 'https://api.deepseek.com/v1';
           localStorage.setItem('omnipulse_api_base', this.config.apiBase);
         }
-        if (modelInput) {
-          this.config.model = modelInput.value.trim() || 'deepseek-chat';
-          localStorage.setItem('omnipulse_model', this.config.model);
-        }
         if (webhookInput) {
           this.config.webhookUrl = webhookInput.value.trim();
           localStorage.setItem('omnipulse_webhook', this.config.webhookUrl);
         }
 
-        this.showToast('✅ Configuration & API settings saved successfully.');
+        this.showToast(`✅ Configuration saved! Active model: ${this.config.model}`);
       });
     }
 

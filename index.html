@@ -464,9 +464,17 @@
               <input type="text" id="settings-webhook" class="form-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/OMNIPULSE/EXECUTIVE_ALERT">
             </div>
 
-            <button class="btn btn-primary" id="btn-save-settings">
-              Save Configuration
-            </button>
+            <!-- Action Buttons & Status -->
+            <div style="display: flex; gap: 12px; margin-top: 24px; align-items: center;">
+              <button class="btn btn-primary" id="btn-save-settings">
+                Save Configuration
+              </button>
+              <button class="btn btn-secondary" id="btn-test-llm">
+                ⚡ Test API Connection (测试连通性)
+              </button>
+            </div>
+
+            <div id="llm-test-result" style="display: none; margin-top: 16px; padding: 12px 16px; border-radius: var(--radius-md); font-size: 12px;"></div>
           </div>
         </section>
 

@@ -384,6 +384,79 @@ class App {
       });
     }
 
+    // Test LLM Connection Button
+    const testLlmBtn = document.getElementById('btn-test-llm');
+    if (testLlmBtn) {
+      testLlmBtn.addEventListener('click', async () => {
+        const apiKeyInput = document.getElementById('settings-api-key');
+        const apiBaseInput = document.getElementById('settings-api-base');
+        const modelSelect = document.getElementById('settings-model-select');
+        const modelInput = document.getElementById('settings-model');
+        const resultBox = document.getElementById('llm-test-result');
+
+        const key = apiKeyInput ? apiKeyInput.value.trim() : '';
+        const base = apiBaseInput ? apiBaseInput.value.trim() : 'https://api.deepseek.com/v1';
+        let model = 'deepseek-chat';
+        if (modelSelect && modelSelect.style.display !== 'none') {
+          model = modelSelect.value;
+        } else if (modelInput) {
+          model = modelInput.value.trim() || 'deepseek-chat';
+        }
+
+        if (!key) {
+          if (resultBox) {
+            resultBox.style.display = 'block';
+            resultBox.style.background = 'rgba(239, 68, 68, 0.1)';
+            resultBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            resultBox.style.color = '#F87171';
+            resultBox.innerHTML = '⚠️ <strong>API Key 不能为空</strong>：请先在上方输入您的 API Key 后再进行连通性测试。';
+          }
+          return;
+        }
+
+        testLlmBtn.disabled = true;
+        testLlmBtn.innerText = '⏳ Testing Connection...';
+        if (resultBox) resultBox.style.display = 'none';
+
+        try {
+          const resp = await fetch('/api/test-llm', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apiKey: key, apiBase: base, model: model })
+          });
+          const data = await resp.json();
+
+          if (resultBox) {
+            resultBox.style.display = 'block';
+            if (data.success) {
+              resultBox.style.background = 'rgba(16, 185, 129, 0.1)';
+              resultBox.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+              resultBox.style.color = 'var(--emerald)';
+              resultBox.innerHTML = `🟢 <strong>API 连通测试成功！</strong><br>服务商返回响应耗时: <strong>${data.latencyMs}ms</strong> | 当前模型: <code>${data.model}</code><br>您的 API Key 已完全生效并已准备就绪！`;
+              this.showToast(`🟢 连通测试成功！响应耗时: ${data.latencyMs}ms`);
+            } else {
+              resultBox.style.background = 'rgba(239, 68, 68, 0.1)';
+              resultBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+              resultBox.style.color = '#F87171';
+              resultBox.innerHTML = `🔴 <strong>连通测试失败</strong>：${data.error}<br><small style="color: var(--text-muted);">请检查 API Key 是否正确、账户余额是否充足或网络接口地址是否畅通。</small>`;
+              this.showToast(`🔴 连通测试失败: ${data.error}`);
+            }
+          }
+        } catch (err) {
+          if (resultBox) {
+            resultBox.style.display = 'block';
+            resultBox.style.background = 'rgba(239, 68, 68, 0.1)';
+            resultBox.style.border = '1px solid rgba(239, 68, 68, 0.3)';
+            resultBox.style.color = '#F87171';
+            resultBox.innerHTML = `🔴 <strong>网络错误</strong>：${err.message}`;
+          }
+        } finally {
+          testLlmBtn.disabled = false;
+          testLlmBtn.innerText = '⚡ Test API Connection (测试连通性)';
+        }
+      });
+    }
+
     // Modal close buttons
     document.querySelectorAll('[data-close-modal]').forEach(btn => {
       btn.addEventListener('click', () => {

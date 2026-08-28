@@ -74,6 +74,11 @@ export class AgentSwarmEngine {
 
     // Step 0: Orchestrator Initializing
     log("ORCHESTRATOR", `Initializing Autonomous Intelligence Swarm for target: "${targetName}" (${targetUrl || 'Pre-configured'})`);
+    if (config.apiKey) {
+      log("ORCHESTRATOR", `🟢 LLM Inference Engine: Active API Connected (${config.model || 'deepseek-chat'} via ${config.provider || 'DeepSeek'})`);
+    } else {
+      log("ORCHESTRATOR", `🔵 LLM Inference Engine: Deterministic Heuristic Swarm Engine (Zero-Key Mode)`);
+    }
     this._updateAgentStates("idle", 0);
     await this._sleep(400);
 

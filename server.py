@@ -48,6 +48,69 @@ class OmniPulseRequestHandler(http.server.SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
+        if self.path == "/api/test-llm":
+            try:
+                content_length = int(self.headers.get("Content-Length", 0))
+                body_bytes = self.rfile.read(content_length)
+                body = json.loads(body_bytes.decode("utf-8"))
+
+                api_key = body.get("apiKey", "").strip()
+                api_base = body.get("apiBase", "https://api.deepseek.com/v1").rstrip("/")
+                model = body.get("model", "deepseek-chat").strip()
+
+                if not api_key:
+                    self.send_response(400)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({"success": False, "error": "API Key cannot be empty"}).encode("utf-8"))
+                    return
+
+                import time, ssl, urllib.request
+                t0 = time.time()
+
+                payload = {
+                    "model": model,
+                    "messages": [{"role": "user", "content": "Respond with the word 'OK' only."}],
+                    "max_tokens": 5
+                }
+
+                endpoint = f"{api_base}/chat/completions"
+                data_bytes = json.dumps(payload).encode("utf-8")
+                headers = {
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {api_key}"
+                }
+
+                ctx = ssl.create_default_context()
+                ctx.check_hostname = False
+                ctx.verify_mode = ssl.CERT_NONE
+
+                req = urllib.request.Request(endpoint, data=data_bytes, headers=headers, method="POST")
+                with urllib.request.urlopen(req, context=ctx, timeout=15) as resp:
+                    resp_body = resp.read().decode("utf-8")
+                    latency_ms = int((time.time() - t0) * 1000)
+                    resp_json = json.loads(resp_body)
+                    reply = resp_json.get("choices", [{}])[0].get("message", {}).get("content", "").strip()
+
+                    self.send_response(200)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(json.dumps({
+                        "success": True,
+                        "latencyMs": latency_ms,
+                        "model": model,
+                        "reply": reply
+                    }).encode("utf-8"))
+                    print(f"[OmniPulse Server] 🟢 LLM Ping test succeeded ({model}, {latency_ms}ms)")
+
+            except Exception as e:
+                print(f"[OmniPulse Server] 🔴 LLM Ping test failed: {e}")
+                self.send_response(200)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(json.dumps({"success": False, "error": str(e)}).encode("utf-8"))
+            return
+
         if self.path == "/api/scan":
             try:
                 content_length = int(self.headers.get("Content-Length", 0))
